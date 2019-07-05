@@ -79,8 +79,10 @@ void scale_row(float *row, unsigned int len, float scale_factor)
 void add_rows(float *dest, float *src, unsigned int len, float scale_factor)
 {
 	float *buff = scale_row_to_buffer(src, NULL, len, scale_factor);
+	float *tmp = buff;
 	for (len; len > 0; --len)
 		*(dest++) += *(buff++);
+	free(tmp);
 }
 
 char is_row_echelon(MATRIX *matrix)
@@ -123,7 +125,7 @@ void make_matrix_row_echelon(MATRIX *src)
 			add_rows(matrix + i*cols, matrix + pos*cols, cols, sf);
 		}
 	}
-	for (int i = 0; i < rows; ++i)
+	for (unsigned int i = 0; i < rows; ++i)
 	{
 		matrix[(i+1) * cols -1] /= matrix[i * cols + i];
 		matrix[i * cols + i] = 1;
@@ -151,10 +153,10 @@ int main(int argc, char **args)
 		make_matrix_row_echelon(matrix);
 
 	print_matrix(matrix);
-	
+
 	destroy_matrix(matrix);
 
 	fclose(input);
-	
+
 	return 0;
 }
