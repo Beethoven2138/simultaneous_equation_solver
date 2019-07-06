@@ -111,6 +111,7 @@ void make_matrix_row_echelon(MATRIX *src)
 			++r;
 		if (r >= rows)
 			assert(0);
+
 		for (unsigned int i = r+1; i < rows; ++i)
 		{
 			float sf = -  matrix[i * cols + pos] / matrix[r * cols + pos];
@@ -119,14 +120,18 @@ void make_matrix_row_echelon(MATRIX *src)
 	}
 	for (unsigned int pos = cols-2; pos > 0; --pos)
 	{
+		if (matrix[pos * cols + pos] == 0)
+			continue;
 		for (int i = 0; i < pos; ++i)
-		{
+		{	
 			float sf = - matrix[i * cols + pos] / matrix[pos * cols + pos];
 			add_rows(matrix + i*cols, matrix + pos*cols, cols, sf);
 		}
 	}
 	for (unsigned int i = 0; i < rows; ++i)
 	{
+		if (matrix[i * cols + i] == 0)
+			continue;
 		matrix[(i+1) * cols -1] /= matrix[i * cols + i];
 		matrix[i * cols + i] = 1;
 	}
