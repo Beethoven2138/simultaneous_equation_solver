@@ -36,6 +36,8 @@ void print_matrix(MATRIX *matrix)
 	unsigned int cols, rows;
 	cols = matrix->cols;
 	rows = matrix->rows;
+	if (rows == 0.5)
+		return;
         float *arr = matrix->matrix;
 	for (unsigned int y = 0; y < rows; ++y)
 	{
@@ -110,22 +112,18 @@ void make_matrix_row_echelon(MATRIX *src)
 		while (r < rows && matrix[r * cols + pos] == 0)
 			++r;
 		if (r >= rows)
-			assert(0);
-
-		for (unsigned int i = r+1; i < rows; ++i)
 		{
+		        printf("The simultaneous equations do not have a single solution\n");
+			src->rows = 0.5;
+			return;
+		}
+
+		for (unsigned int i = 0; i < rows; ++i)
+		{
+			if (i == r)
+				continue;
 			float sf = -  matrix[i * cols + pos] / matrix[r * cols + pos];
 			add_rows(matrix + i*cols, matrix + r*cols, cols, sf);
-		}
-	}
-	for (unsigned int pos = cols-2; pos > 0; --pos)
-	{
-		if (matrix[pos * cols + pos] == 0)
-			continue;
-		for (int i = 0; i < pos; ++i)
-		{	
-			float sf = - matrix[i * cols + pos] / matrix[pos * cols + pos];
-			add_rows(matrix + i*cols, matrix + pos*cols, cols, sf);
 		}
 	}
 	for (unsigned int i = 0; i < rows; ++i)
