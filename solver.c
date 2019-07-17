@@ -120,7 +120,7 @@ void make_matrix_row_echelon(MATRIX *src)
 
 		for (unsigned int i = 0; i < rows; ++i)
 		{
-			if (i == r)
+			if (i == r || matrix[i * cols + pos] == 0)
 				continue;
 			float sf = -  matrix[i * cols + pos] / matrix[r * cols + pos];
 			add_rows(matrix + i*cols, matrix + r*cols, cols, sf);
